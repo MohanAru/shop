@@ -35,7 +35,11 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (fetchedProducts.isNotEmpty) {
         products = fetchedProducts;
-        print("products ${products.length}");
+        var sum = 0.0;
+        for (var element in products) {
+          sum += element.price;
+        }
+        print("products ${sum}");
       }
     });
   }
@@ -196,8 +200,8 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 CachedNetworkImage(
                                   imageUrl: product.imageUrl ?? '',
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
+                                  placeholder: (context, url) => Center(
+                                      child: const CircularProgressIndicator()),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
                                   height: 100, // Adjust image height
