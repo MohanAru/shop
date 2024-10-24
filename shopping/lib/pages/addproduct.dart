@@ -87,6 +87,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _productNameController,
                 decoration: const InputDecoration(
                   labelText: 'Product Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
