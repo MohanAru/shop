@@ -15,12 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Example list of products
-  List products = [
-    'Product 1',
-    'Product 2',
-    'Product 3',
-    'Product 4',
-    'Product 5',
+  List<Product> products = [
     // Add more products as needed
   ];
 
@@ -38,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchProducts() async {
     List<Product> fetchedProducts = await ProductService().fetchProducts();
     setState(() {
-      if (fetchedProducts.isNotEmpty || fetchedProducts != null) {
+      if (fetchedProducts.isNotEmpty) {
         products = fetchedProducts;
         print("products ${products.length}");
       }
@@ -182,24 +177,39 @@ class _HomePageState extends State<HomePage> {
                       ),
                       itemCount: products.length,
                       itemBuilder: (context, index) {
+                        Product product = products[index];
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProductDetailsPage(
-                                    productName: products[index]),
+                                builder: (context) =>
+                                    ProductDetailsPage(product: product),
                               ),
                             );
                           },
                           child: Card(
                             elevation: 4,
                             margin: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Text(
-                                products[index],
-                                style: const TextStyle(fontSize: 18),
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: product.imageUrl ?? '',
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                  height: 100, // Adjust image height
+                                ),
+                                Text(
+                                  product.productName,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text('${product.price} USD'),
+                              ],
                             ),
                           ),
                         );

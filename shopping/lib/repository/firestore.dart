@@ -22,6 +22,7 @@ class ProductService {
   Future<List<Product>> fetchProducts() async {
     try {
       QuerySnapshot querySnapshot = await productCollection.get();
+      print("querySnapshot : ${querySnapshot.docs[0].data()}");
       return querySnapshot.docs
           .map((doc) => Product.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
