@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (fetchedProducts.isNotEmpty || fetchedProducts != null) {
         products = fetchedProducts;
+        print("products ${products.length}");
       }
     });
   }

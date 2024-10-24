@@ -8,8 +8,11 @@ class ProductService {
 
   // Add a product to Firestore
   Future<void> addProduct(Product product) async {
+    print("adding firestoree");
+    print("product.toMap() ${product.toMap()}");
     try {
       await productCollection.add(product.toMap());
+      print("product.toMap() ${product.toMap()}");
     } catch (e) {
       print('Error adding product: $e');
     }
