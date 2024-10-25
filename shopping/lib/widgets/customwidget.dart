@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping/model/model.dart';
 import 'package:shopping/repository/firestore.dart';
@@ -13,6 +14,7 @@ class MoreOptionsMenu extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: PopupMenuButton<int>(
+        color: Colors.white,
         icon: const Icon(Icons.more_vert), // More options icon
         onSelected: (value) {
           if (value == 1) {
@@ -42,7 +44,9 @@ class MoreOptionsMenu extends StatelessWidget {
           ),
           const PopupMenuItem(
             value: 2,
-            child: Text("Settings"),
+            child: Text(
+              "Order Details",
+            ),
           ),
           const PopupMenuItem(
             value: 3,
@@ -78,35 +82,80 @@ class SettingsPage extends StatelessWidget {
           }
 
           final orders = snapshot.data!;
+          getTotal() {
+            var sum = 0.0;
+            for (var element in snapshot.data!) {
+              // print("Mohan : ${element.price}");
+              sum += element.price;
+            }
+            return sum;
+          }
 
-          return ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              return Card(
-                margin: const EdgeInsets.all(8),
-                child: ListTile(
-                  leading: Image.network(
-                    order.imageUrl,
-                    fit: BoxFit.cover,
-                    width: 60,
-                    height: 60,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.error),
-                  ),
-                  title: Text(order.productName),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          // print(getTotal());
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    final order = orders[index];
+                    return Card(
+                      margin: const EdgeInsets.all(8),
+                      child: ListTile(
+                        leading: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: order.imageUrl ?? '',
+                            placeholder: (context, url) => Center(
+                                child: const CircularProgressIndicator()),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            // height: 50,
+                          ),
+                        ),
+                        title: Text(order.productName),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Price: \$${order.price.toStringAsFixed(2)}'),
+                            Text(
+                                'Quantity: ${order.vanishRate}'), // You can add more fields here
+                          ],
+                        ),
+                        trailing: Text('\$${order.price.toStringAsFixed(2)}'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                color: Colors.orange[300],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
                     children: [
-                      Text('Price: \$${order.price.toStringAsFixed(2)}'),
                       Text(
-                          'Quantity: ${order.vanishRate}'), // You can add more fields here
+                        "Purchase of this Month",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                            color: Colors.blue),
+                      ),
+                      Expanded(child: SizedBox()),
+                      Text(
+                        "\$ ${getTotal().toStringAsFixed(1)}   ",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green),
+                      )
                     ],
                   ),
-                  trailing: Text('\$${order.price.toStringAsFixed(2)}'),
                 ),
-              );
-            },
+              )
+            ],
           );
         },
       ),
