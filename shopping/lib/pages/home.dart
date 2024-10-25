@@ -5,6 +5,7 @@ import 'package:shopping/pages/productdetails.dart';
 import 'package:shopping/repository/firestore.dart';
 import 'package:shopping/widgets/customwidget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shimmer/shimmer.dart'; // Import the shimmer package
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,48 +15,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Example list of products
-  List<Product> products = [
-    // Add more products as needed
-  ];
-
+  List<Product> products = [];
+  bool isLoading = true; // Add a loading state
   // Example list of image URLs for the carousel
   final List<String> carouselImages = [
-    'https://www.sliderrevolution.com/wp-content/uploads/2021/07/Showcase-Carousel.jpg',
-    'https://img.freepik.com/free-psd/banner-sneakers-sale-template_23-2148748560.jpg',
-    'https://forfrontend.com/wp-content/uploads/2021/09/20231003_133551_0000.jpg',
-    'https://elfsight.com/wp-content/uploads/2019/10/image-slider-screenshot-2.jpg',
+    'https://images.unsplash.com/photo-1561909848-977d0617f275?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/258244/pexels-photo-258244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/164455/pexels-photo-164455.jpeg',
   ];
-  TextEditingController controller = TextEditingController();
-  FocusNode _focusNode = FocusNode();
 
   // Fetch products from Firestore and update the UI
   Future<void> fetchProducts() async {
     List<Product> fetchedProducts = await ProductService().fetchProducts();
     setState(() {
-      if (fetchedProducts.isNotEmpty) {
-        products = fetchedProducts;
-        var sum = 0.0;
-        for (var element in products) {
-          sum += element.price;
-        }
-        print("products ${sum}");
-      }
+      products = fetchedProducts;
+      isLoading = false; // Set loading to false when data is fetched
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchProducts();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -75,7 +57,7 @@ class _HomePageState extends State<HomePage> {
               errorWidget: (context, url, error) {
                 print("iam asset source");
                 return Image.asset(
-                  'assets/images/shop.png', // Local fallback image
+                  'assets/images/shop.png',
                   fit: BoxFit.cover,
                 );
               },
@@ -97,128 +79,148 @@ class _HomePageState extends State<HomePage> {
         ),
         body: GestureDetector(
           onTap: () {
-            _focusNode.unfocus();
+            FocusScope.of(context).unfocus();
           },
           child: Column(
             children: [
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: Padding(
-              //         padding: const EdgeInsets.symmetric(
-              //             horizontal: 15, vertical: 8),
-              //         child: TextField(
-              //           focusNode: _focusNode,
-              //           controller: controller,
-              //           decoration: const InputDecoration(
-              //             hintText: 'Search for the Products',
-              //             hintStyle: TextStyle(color: Colors.grey),
-              //             border: OutlineInputBorder(
-              //               borderRadius:
-              //                   BorderRadius.all(Radius.circular(15.0)),
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //     const Icon(Icons.search),
-              //   ],
-              // ),
-
-              // Carousel slider here
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: 100.0, // Adjust height according to your design
-                    autoPlay: true,
-                    enlargeCenterPage: true,
-                    autoPlayInterval: const Duration(seconds: 3),
-                    viewportFraction: 1.0, // Maintain aspect ratio
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Explore",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 25.0),
+                    ),
                   ),
-                  items: carouselImages.map((imageUrl) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: const BoxDecoration(
-                              // color: Colors.amber,
-                              ),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Rounded corners
-                            child: CachedNetworkImage(
-                              imageUrl: imageUrl,
-                              placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
-                              errorWidget: (context, url, error) => Image.asset(
-                                'assets/images/shop.png', // Local fallback image
-                                fit: BoxFit.cover,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
+                ],
               ),
-
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    // Calculate the number of columns based on the available width
-                    int crossAxisCount = (constraints.maxWidth / 150).floor();
-
-                    return GridView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        childAspectRatio:
-                            1, // Adjust the aspect ratio as needed
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: constraints.maxWidth > 500 ? 200 : 100.0,
+                        autoPlay: true,
+                        enlargeCenterPage: true,
+                        autoPlayInterval: const Duration(seconds: 3),
+                        viewportFraction: 1.0,
                       ),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        Product product = products[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductDetailsPage(product: product),
+                      items: carouselImages.map((imageUrl) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: const BoxDecoration(),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator()),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                    'assets/images/shop.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                  fit: BoxFit.cover,
+                                  maxWidthDiskCache: 500,
+                                  maxHeightDiskCache: 500,
+                                ),
                               ),
                             );
                           },
-                          child: Card(
-                            elevation: 4,
-                            margin: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CachedNetworkImage(
-                                  imageUrl: product.imageUrl ?? '',
-                                  placeholder: (context, url) => Center(
-                                      child: const CircularProgressIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                  height: 100, // Adjust image height
-                                ),
-                                Text(
-                                  product.productName,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text('${product.price} USD'),
-                              ],
-                            ),
-                          ),
                         );
-                      },
-                    );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    int crossAxisCount = (constraints.maxWidth / 150).floor();
+                    return isLoading
+                        ? GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              childAspectRatio: 1,
+                            ),
+                            itemCount: 8, // Placeholder shimmer items
+                            itemBuilder: (context, index) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  margin: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              childAspectRatio: 1,
+                            ),
+                            itemCount: products.length,
+                            itemBuilder: (context, index) {
+                              Product product = products[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductDetailsPage(product: product),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      // border: Border.all(width: 0.4),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  margin: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: CachedNetworkImage(
+                                          imageUrl: product.imageUrl ?? '',
+                                          placeholder: (context, url) => Center(
+                                              child:
+                                                  const CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                          height: 100,
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          product.productName,
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Flexible(
+                                          child: Text('${product.price} USD')),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
                   },
                 ),
               ),

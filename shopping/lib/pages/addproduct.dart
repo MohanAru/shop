@@ -105,6 +105,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _imageUrlController,
                 decoration: const InputDecoration(
                   labelText: 'Image URL',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -120,6 +123,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _vanishRateController,
                 decoration: const InputDecoration(
                   labelText: 'Vanish Rate',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -136,6 +142,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _priceController,
                 decoration: const InputDecoration(
                   labelText: 'Price',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -152,6 +161,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _offController,
                 decoration: const InputDecoration(
                   labelText: 'Discount',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -187,6 +199,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _descriptionController,
                 decoration: const InputDecoration(
                   labelText: 'Description',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 ),
                 maxLines: 3,
               ),
@@ -197,6 +212,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: _remarksController,
                 decoration: const InputDecoration(
                   labelText: 'Remarks',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 ),
                 maxLines: 3,
               ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shopping/model/model.dart';
+import 'package:shopping/repository/firestore.dart';
 
 import '../pages/addproduct.dart';
 
@@ -23,7 +25,7 @@ class MoreOptionsMenu extends StatelessWidget {
             // Navigate to Settings Page
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
+              MaterialPageRoute(builder: (context) => SettingsPage()),
             );
           } else if (value == 3) {
             // Log out action
@@ -54,13 +56,60 @@ class MoreOptionsMenu extends StatelessWidget {
 
 // 2.Placeholder for SettingsPage
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  SettingsPage({super.key});
+  final ProductService productService =
+      ProductService(); // Initialize ProductService
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: const Center(child: Text('Settings Page')),
+      appBar: AppBar(
+        title: const Text('My Orders'),
+      ),
+      body: FutureBuilder<List<Product>>(
+        future: productService.fetchOrders(), // Call fetchOrders method
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No orders found.'));
+          }
+
+          final orders = snapshot.data!;
+
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              final order = orders[index];
+              return Card(
+                margin: const EdgeInsets.all(8),
+                child: ListTile(
+                  leading: Image.network(
+                    order.imageUrl,
+                    fit: BoxFit.cover,
+                    width: 60,
+                    height: 60,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.error),
+                  ),
+                  title: Text(order.productName),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Price: \$${order.price.toStringAsFixed(2)}'),
+                      Text(
+                          'Quantity: ${order.vanishRate}'), // You can add more fields here
+                    ],
+                  ),
+                  trailing: Text('\$${order.price.toStringAsFixed(2)}'),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
