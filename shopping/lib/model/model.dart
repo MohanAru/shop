@@ -1,15 +1,16 @@
 class Product {
+  String? id;
   final String productName;
   final String imageUrl;
   final double vanishRate;
   final double price;
   final String off;
-  final double rating; // Assuming rating is a double
+  final double rating;
   final String description;
   final String remarks;
 
-  // Constructor
   Product({
+    this.id,
     required this.productName,
     required this.imageUrl,
     required this.vanishRate,
@@ -20,9 +21,9 @@ class Product {
     required this.remarks,
   });
 
-  // Convert a Product object into a Map
   Map<String, dynamic> toMap() {
     return {
+      if (id != null) 'id': id,
       'productname': productName,
       'imageurl': imageUrl,
       'vanishrate': vanishRate,
@@ -37,6 +38,7 @@ class Product {
   // Create a Product object from a Map
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
+      id: map['id'],
       productName: map['productname'] ?? '',
       imageUrl: map['imageurl'] ?? '',
       vanishRate: map['vanishrate']?.toDouble() ?? 0.0,

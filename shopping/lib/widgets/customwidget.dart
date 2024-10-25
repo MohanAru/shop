@@ -40,17 +40,24 @@ class MoreOptionsMenu extends StatelessWidget {
         itemBuilder: (context) => [
           const PopupMenuItem(
             value: 1,
-            child: Text("Add Products"),
+            child: Text(
+              "Add Products",
+              style: TextStyle(color: Colors.grey),
+            ),
           ),
           const PopupMenuItem(
             value: 2,
             child: Text(
               "Order Details",
+              style: TextStyle(color: Colors.grey),
             ),
           ),
           const PopupMenuItem(
             value: 3,
-            child: Text("Logout"),
+            child: Text(
+              "Logout",
+              style: TextStyle(color: Colors.grey),
+            ),
           ),
         ],
       ),
@@ -61,8 +68,7 @@ class MoreOptionsMenu extends StatelessWidget {
 // 2.Placeholder for SettingsPage
 class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
-  final ProductService productService =
-      ProductService(); // Initialize ProductService
+  final ProductService productService = ProductService();
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +77,7 @@ class SettingsPage extends StatelessWidget {
         title: const Text('My Orders'),
       ),
       body: FutureBuilder<List<Product>>(
-        future: productService.fetchOrders(), // Call fetchOrders method
+        future: productService.fetchOrders(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

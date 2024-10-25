@@ -106,13 +106,25 @@ class ProductDetailsPage extends StatelessWidget {
               children: [
                 // "Add to Cart" Button
                 ElevatedButton(
-                  onPressed: () {
-                    // Add to Cart functionality here
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${product.productName} added to cart'),
-                      ),
-                    );
+                  onPressed: () async {
+                    try {
+                      await productService.addCart(product);
+                      // After adding to orders, pop the current screen
+                      if (context.mounted) {
+                        Navigator.pop(context); // Return to the previous screen
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Added to Cart ${product.productName}'),
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error: Could not complete Add Cart'),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,

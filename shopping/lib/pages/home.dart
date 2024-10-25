@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping/model/model.dart';
+import 'package:shopping/pages/cart.dart';
 import 'package:shopping/pages/productdetails.dart';
 import 'package:shopping/repository/firestore.dart';
 import 'package:shopping/widgets/customwidget.dart';
@@ -71,6 +72,13 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartScreen(),
+                      ));
+                },
                 child: const Icon(Icons.shopping_cart),
               ),
             ),
@@ -141,87 +149,100 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    int crossAxisCount = (constraints.maxWidth / 150).floor();
-                    return isLoading
-                        ? GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              childAspectRatio: 1,
-                            ),
-                            itemCount: 8, // Placeholder shimmer items
-                            itemBuilder: (context, index) {
-                              return Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
-                                child: Container(
-                                  margin: const EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              childAspectRatio: 1,
-                            ),
-                            itemCount: products.length,
-                            itemBuilder: (context, index) {
-                              Product product = products[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductDetailsPage(product: product),
+                child: Container(
+                  // color: const Color.fromARGB(255, 188, 225, 244),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      int crossAxisCount = (constraints.maxWidth / 150).floor();
+                      return isLoading
+                          ? GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: 1,
+                              ),
+                              itemCount: 8, // Placeholder shimmer items
+                              itemBuilder: (context, index) {
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      // border: Border.all(width: 0.4),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  margin: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: CachedNetworkImage(
-                                          imageUrl: product.imageUrl ?? '',
-                                          placeholder: (context, url) => Center(
-                                              child:
-                                                  const CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                          height: 100,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          product.productName,
-                                          style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Flexible(
-                                          child: Text('${product.price} USD')),
-                                    ],
                                   ),
-                                ),
-                              );
-                            },
-                          );
-                  },
+                                );
+                              },
+                            )
+                          : GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: 1,
+                              ),
+                              itemCount: products.length,
+                              itemBuilder: (context, index) {
+                                Product product = products[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailsPage(
+                                                product: product),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    // decoration: BoxDecoration(
+                                    //     // border: Border.all(width: 0.4),
+                                    //     borderRadius:
+                                    //         BorderRadius.circular(12)),
+                                    margin: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          height: 100,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          child: CachedNetworkImage(
+                                            fit: BoxFit.cover,
+                                            imageUrl: product.imageUrl ?? '',
+                                            placeholder: (context, url) => Center(
+                                                child:
+                                                    const CircularProgressIndicator()),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                            height: 100,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            product.productName,
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Flexible(
+                                            child:
+                                                Text('${product.price} USD')),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                    },
+                  ),
                 ),
               ),
             ],
