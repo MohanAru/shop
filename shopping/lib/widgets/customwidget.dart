@@ -114,20 +114,35 @@ class SettingsPage extends StatelessWidget {
                           child: CachedNetworkImage(
                             fit: BoxFit.cover,
                             imageUrl: order.imageUrl ?? '',
-                            placeholder: (context, url) => Center(
-                                child: const CircularProgressIndicator()),
+                            placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
                             // height: 50,
                           ),
                         ),
-                        title: Text(order.productName),
+                        title: Text(
+                          order.productName,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Price: \$${order.price.toStringAsFixed(2)}'),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                Text('${order.rating.toStringAsFixed(1)}'),
+                              ],
+                            ),
                             Text(
-                                'Quantity: ${order.vanishRate}'), // You can add more fields here
+                              'Vanish Rate: \$${order.vanishRate}',
+                              style: TextStyle(
+                                  decoration: TextDecoration.lineThrough),
+                            ), // You can add more fields here
                           ],
                         ),
                         trailing: Text('\$${order.price.toStringAsFixed(2)}'),
@@ -142,17 +157,17 @@ class SettingsPage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         "Purchase of this Month",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
                             color: Colors.blue),
                       ),
-                      Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
                       Text(
                         "\$ ${getTotal().toStringAsFixed(1)}   ",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.green),
