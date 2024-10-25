@@ -115,12 +115,14 @@ class ProductDetailsPage extends StatelessWidget {
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          backgroundColor: Colors.green,
                           content: Text('Added to Cart ${product.productName}'),
                         ),
                       );
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          backgroundColor: Colors.red,
                           content: Text('Error: Could not complete Add Cart'),
                         ),
                       );
@@ -153,12 +155,14 @@ class ProductDetailsPage extends StatelessWidget {
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          backgroundColor: Colors.green,
                           content: Text('Buying ${product.productName}'),
                         ),
                       );
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          backgroundColor: Colors.red,
                           content: Text('Error: Could not complete purchase'),
                         ),
                       );

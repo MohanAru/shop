@@ -64,7 +64,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
       // After saving, you can clear the form or navigate away
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product added successfully!')),
+        const SnackBar(
+            content: Text('Product added successfully!'),
+            backgroundColor: Colors.green),
       );
       _formKey.currentState!.reset(); // Reset the form
     }

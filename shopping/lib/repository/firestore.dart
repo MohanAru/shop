@@ -10,17 +10,13 @@ class ProductService {
   final CollectionReference cartCollection =
       FirebaseFirestore.instance.collection("cart");
 
-  // Add a product to Firestore and store docRef.id in Product
   Future<void> addProduct(Product product) async {
     print("Adding product to Firestore");
     try {
-      // Add product and get DocumentReference
       DocumentReference docRef = await productCollection.add(product.toMap());
 
-      // Store the docRef.id in the product
       product.id = docRef.id;
 
-      // Update the product with the docRef.id in Firestore
       await productCollection.doc(docRef.id).update(product.toMap());
 
       print("Product added with ID: ${product.id}");
@@ -29,17 +25,13 @@ class ProductService {
     }
   }
 
-  // Add an order to Firestore and store docRef.id in Product
   Future<void> addOrders(Product product) async {
     print("Adding order to Firestore");
     try {
-      // Add order and get DocumentReference
       DocumentReference docRef = await ordercCollection.add(product.toMap());
 
-      // Store the docRef.id in the product
       product.id = docRef.id;
 
-      // Update the order with the docRef.id in Firestore
       await ordercCollection.doc(docRef.id).update(product.toMap());
 
       print("Order added with ID: ${product.id}");
@@ -48,14 +40,20 @@ class ProductService {
     }
   }
 
-  // Add a Cart to Firestore and store docRef.id in Product
   Future<void> addCart(Product product) async {
     print("Adding product to Cart");
     try {
-      // Add product to cart and get DocumentReference
+      QuerySnapshot querySnapshot = await cartCollection
+          .where('productname', isEqualTo: product.productName)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        print("Product is already in the cart");
+        return;
+      }
+
       DocumentReference docRef = await cartCollection.add(product.toMap());
 
-      // Store the docRef.id in the product
       product.id = docRef.id;
 
       // Update the cart product with the docRef.id in Firestore
