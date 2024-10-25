@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shopping/main.dart';
 import 'package:shopping/model/model.dart';
 import 'package:shopping/repository/firestore.dart';
+import 'package:shopping/store/sharedprefernce.dart';
 
 import '../pages/addproduct.dart';
 
@@ -30,11 +32,7 @@ class MoreOptionsMenu extends StatelessWidget {
               MaterialPageRoute(builder: (context) => SettingsPage()),
             );
           } else if (value == 3) {
-            // Log out action
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LogoutPage()),
-            );
+            _showLogoutDialog(context);
           }
         },
         itemBuilder: (context) => [
@@ -61,6 +59,44 @@ class MoreOptionsMenu extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Logout",
+            style: TextStyle(color: Colors.red),
+          ),
+          content: const Text("Are you sure you want to logout?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Close the dialog
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Clear the login state and navigate to the login page
+                await SharedPrefService.clearLoginState();
+                // Navigate to the login page (replace with your login page)
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  (route) => false, // Remove all routes
+                );
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -173,13 +173,14 @@ class _HomePageState extends State<HomePage> {
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       // Dynamically adjust crossAxisCount based on screen width
-                      int crossAxisCount = constraints.maxWidth > 1200
-                          ? 5
-                          : constraints.maxWidth > 800
-                              ? 4
-                              : constraints.maxWidth > 600
-                                  ? 3
-                                  : 2;
+                      int crossAxisCount = (constraints.maxWidth / 150).floor();
+                      //  > 1200
+                      //     ? 5
+                      //     : constraints.maxWidth > 800
+                      //         ? 4
+                      //         : constraints.maxWidth > 600
+                      //             ? 3
+                      //             : 2;
 
                       return isLoading
                           ? GridView.builder(
