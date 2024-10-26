@@ -57,7 +57,6 @@ class ProductService {
 
       product.id = docRef.id;
 
-      // Update the cart product with the docRef.id in Firestore
       await cartCollection.doc(docRef.id).update(product.toMap());
 
       print("Product added to cart with ID: ${product.id}");
@@ -66,7 +65,6 @@ class ProductService {
     }
   }
 
-  // Retrieve all products from Firestore
   Future<List<Product>> fetchProducts() async {
     try {
       QuerySnapshot querySnapshot = await productCollection.get();
@@ -79,7 +77,6 @@ class ProductService {
     }
   }
 
-  // Retrieve all orders from Firestore
   Future<List<Product>> fetchOrders() async {
     try {
       QuerySnapshot querySnapshot = await ordercCollection.get();
@@ -92,7 +89,6 @@ class ProductService {
     }
   }
 
-  // Remove a product from Firestore by doc.id
   Future<void> removeCart(Product product) async {
     print("Removing product from Cart with ID: ${product.id}");
     try {
@@ -108,7 +104,6 @@ class ProductService {
     }
   }
 
-  // Retrieve all products in the cart from Firestore
   Future<List<Product>> fetchCart() async {
     try {
       QuerySnapshot querySnapshot = await cartCollection.get();

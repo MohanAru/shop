@@ -7,7 +7,6 @@ import 'package:shopping/store/sharedprefernce.dart';
 
 import '../pages/addproduct.dart';
 
-// 1.Custom Widget for PopupMenu
 class MoreOptionsMenu extends StatelessWidget {
   const MoreOptionsMenu({super.key});
 
@@ -20,13 +19,11 @@ class MoreOptionsMenu extends StatelessWidget {
         icon: const Icon(Icons.more_vert), // More options icon
         onSelected: (value) {
           if (value == 1) {
-            // Navigate to Profile Page
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ProfilePage()),
             );
           } else if (value == 2) {
-            // Navigate to Settings Page
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => SettingsPage()),
@@ -83,9 +80,7 @@ class MoreOptionsMenu extends StatelessWidget {
             ),
             TextButton(
               onPressed: () async {
-                // Clear the login state and navigate to the login page
                 await SharedPrefService.clearLoginState();
-                // Navigate to the login page (replace with your login page)
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -101,7 +96,6 @@ class MoreOptionsMenu extends StatelessWidget {
   }
 }
 
-// 2.Placeholder for SettingsPage
 class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
   final ProductService productService = ProductService();
@@ -220,7 +214,6 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-// 3.Placeholder for LogoutPage
 class LogoutPage extends StatelessWidget {
   const LogoutPage({super.key});
 

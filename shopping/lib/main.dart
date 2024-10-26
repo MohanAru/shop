@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ); // Ensure Firebase is initialized
+  );
 
   bool isLoggedIn = await SharedPrefService.getLoginState();
   runApp(MyApp(isLoggedIn: isLoggedIn));
@@ -101,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Email TextField
                   SizedBox(
                     height: 60,
                     child: TextFormField(
@@ -125,8 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // Password TextField
                   SizedBox(
                     height: 60,
                     child: TextFormField(
@@ -150,8 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-
-                  // Login Button
                   _isLoading
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
@@ -159,8 +154,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Text('Login'),
                         ),
                   const SizedBox(height: 16),
-
-                  // Sign Up Redirect
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -250,7 +243,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Email TextField
                   SizedBox(
                     height: 60,
                     child: TextFormField(
@@ -275,7 +267,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Password TextField
                   SizedBox(
                     height: 60,
                     child: TextFormField(
@@ -309,7 +300,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                   const SizedBox(height: 16),
 
-                  // Login Redirect
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);

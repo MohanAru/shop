@@ -12,8 +12,7 @@ class SharedPrefService {
   // Retrieve login state
   static Future<bool> getLoginState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_isLoggedInKey) ??
-        false; // default to false if not set
+    return prefs.getBool(_isLoggedInKey) ?? false;
   }
 
   // Clear login state

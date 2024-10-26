@@ -104,14 +104,12 @@ class ProductDetailsPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // "Add to Cart" Button
                 ElevatedButton(
                   onPressed: () async {
                     try {
                       await productService.addCart(product);
-                      // After adding to orders, pop the current screen
                       if (context.mounted) {
-                        Navigator.pop(context); // Return to the previous screen
+                        Navigator.pop(context);
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -146,7 +144,6 @@ class ProductDetailsPage extends StatelessWidget {
                 // "Buy Now" Button
                 ElevatedButton(
                   onPressed: () async {
-                    // Buy Now functionality: Add to orders
                     try {
                       await productService.addOrders(product);
                       // After adding to orders, pop the current screen
